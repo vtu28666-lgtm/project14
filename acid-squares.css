@@ -1,0 +1,490 @@
+.acid-squares-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+  background-color: #07060a;
+}
+
+.acid-squares-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ========================================================
+   1. THICK GREEN NAVIGATION STYLING (HOVER & ACTIVE)
+   ======================================================== */
+.nav-link {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Cursor on Nav Link (Hover) -> Thick Neon Green Text with Glow */
+.nav-link:hover,
+.nav-link:focus,
+.nav-btn-link:hover,
+header .nav-link:hover {
+  color: #00ff66 !important;
+  font-weight: 800 !important;
+  border-color: #00ff66 !important;
+  background-color: rgba(0, 255, 102, 0.16) !important;
+  text-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 0 28px rgba(0, 255, 102, 0.5) !important;
+  box-shadow: 0 0 18px rgba(0, 255, 102, 0.3) !important;
+  letter-spacing: 0.3px !important;
+  transform: translateY(-1px);
+}
+
+/* Active Page Nav Link -> Thick Neon Green Text with Glow */
+.nav-link.active,
+header .nav-link.active {
+  color: #00ff66 !important;
+  font-weight: 800 !important;
+  border-color: #00ff66 !important;
+  background-color: rgba(0, 255, 102, 0.22) !important;
+  text-shadow: 0 0 16px rgba(0, 255, 102, 0.9), 0 0 32px rgba(0, 255, 102, 0.6) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.35) !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* ========================================================
+   2. ULTRA-SMOOTH CINEMATIC PAGE TRANSITIONS
+   Randomly travels from Top-to-Center OR Bottom-to-Top
+   ======================================================== */
+@keyframes cinematicTopToCenter {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -125px, 0) scale(0.975);
+    filter: blur(10px);
+  }
+  35% {
+    opacity: 0.65;
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicBottomToTop {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 125px, 0) scale(0.975);
+    filter: blur(10px);
+  }
+  35% {
+    opacity: 0.65;
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes cinematicExitToTop {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, -90px, 0) scale(0.97);
+    filter: blur(8px);
+  }
+}
+
+@keyframes cinematicExitToBottom {
+  0% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 90px, 0) scale(0.97);
+    filter: blur(8px);
+  }
+}
+
+/* Applied dynamically to .main-wrapper, .portal-wrapper, or main container */
+.cinematic-travel-top {
+  animation: cinematicTopToCenter 1.25s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.cinematic-travel-bottom {
+  animation: cinematicBottomToTop 1.25s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.cinematic-exit-up {
+  animation: cinematicExitToTop 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+.cinematic-exit-down {
+  animation: cinematicExitToBottom 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+/* ========================================================
+   3. MOBILE TWO-DOTS BUTTON & SLOW CINEMATIC SLIDING DRAWER
+   (Sidebar STRICTLY appears ONLY when user clicks the 2 dots on top-right!)
+   ======================================================== */
+.mobile-dots-btn {
+  display: none;
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  z-index: 1300;
+  width: 46px;
+  height: 46px;
+  background: rgba(7, 18, 12, 0.92);
+  border: 2px solid #00ff66;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  box-shadow: 0 0 16px rgba(0, 255, 102, 0.45), inset 0 0 8px rgba(0, 255, 102, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  outline: none;
+}
+
+.mobile-dots-btn:hover,
+.mobile-dots-btn:active,
+.mobile-dots-btn.active {
+  transform: scale(1.08);
+  background: rgba(0, 255, 102, 0.22);
+  box-shadow: 0 0 26px rgba(0, 255, 102, 0.8), inset 0 0 12px rgba(0, 255, 102, 0.4);
+}
+
+.mobile-dots-btn .mobile-dot {
+  width: 7.5px;
+  height: 7.5px;
+  background-color: #00ff66;
+  border-radius: 50%;
+  box-shadow: 0 0 9px #00ff66, 0 0 16px rgba(0, 255, 102, 0.95);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.mobile-dots-btn.active .mobile-dot:first-child {
+  transform: translateY(-2px) scale(1.15);
+}
+
+.mobile-dots-btn.active .mobile-dot:last-child {
+  transform: translateY(2px) scale(1.15);
+}
+
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 34px;
+  height: 34px;
+  background: rgba(0, 255, 102, 0.12);
+  border: 1.5px solid #00ff66;
+  border-radius: 50%;
+  color: #00ff66;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  box-shadow: 0 0 12px rgba(0, 255, 102, 0.3);
+}
+
+.sidebar-close-btn:hover {
+  background: #00ff66;
+  color: #07060a;
+  box-shadow: 0 0 18px rgba(0, 255, 102, 0.8);
+}
+
+/* Keyframe for slow staggered link entry inside drawer */
+@keyframes cinematicNavSlideIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(-35px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* ONLY FOR MOBILE VIEW (<= 900px) */
+@media (max-width: 900px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+
+  .mobile-dots-btn {
+    display: flex !important;
+  }
+
+  .sidebar-backdrop {
+    display: block !important;
+  }
+
+  .sidebar-backdrop.active {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  .sidebar-close-btn {
+    display: flex !important;
+  }
+
+  /* SIDEBAR IS STRICTLY HIDDEN UNTIL USER CLICKS 2-DOTS BUTTON */
+  body {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  .main-wrapper {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 76px 16px 28px 16px !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
+    display: block !important;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important; /* ENTIRE PAGE COVERAGE */
+    max-width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(5, 12, 8, 0.98) !important;
+    backdrop-filter: blur(28px) !important;
+    -webkit-backdrop-filter: blur(28px) !important;
+    border: none !important;
+    box-shadow: none !important;
+    
+    /* Strictly invisible and off-screen until user clicks 2 dots */
+    transform: translate3d(-100vw, 0, 0) !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    
+    /* SLOW CINEMATIC SLIDE TRANSITION (1.1s with ultra-smooth physics) */
+    transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    
+    will-change: transform, visibility, opacity;
+    z-index: 99999 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 32px 20px !important;
+  }
+
+  /* WHEN USER CLICKS 2-DOTS: APPEARS SLOWLY IN A CINEMATIC WAY FOR ENTIRE PAGE */
+  .sidebar.mobile-open {
+    transform: translate3d(0, 0, 0) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    box-shadow: 0 0 70px rgba(0, 255, 102, 0.4) !important;
+  }
+
+  /* Staggered cinematic cascade for links when drawer opens */
+  .sidebar.mobile-open .nav-link {
+    animation: cinematicNavSlideIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .sidebar.mobile-open .nav-link:nth-child(1) { animation-delay: 0.08s; }
+  .sidebar.mobile-open .nav-link:nth-child(2) { animation-delay: 0.14s; }
+  .sidebar.mobile-open .nav-link:nth-child(3) { animation-delay: 0.20s; }
+  .sidebar.mobile-open .nav-link:nth-child(4) { animation-delay: 0.26s; }
+  .sidebar.mobile-open .nav-link:nth-child(5) { animation-delay: 0.32s; }
+  .sidebar.mobile-open .nav-link:nth-child(6) { animation-delay: 0.38s; }
+  .sidebar.mobile-open .nav-link:nth-child(7) { animation-delay: 0.44s; }
+  .sidebar.mobile-open .nav-link:nth-child(8) { animation-delay: 0.50s; }
+
+  .brand {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 420px !important;
+    padding-right: 48px !important;
+    margin-bottom: 24px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .nav-menu {
+    width: 100% !important;
+    max-width: 420px !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    overflow-x: visible !important;
+    padding-bottom: 0 !important;
+  }
+
+  .nav-link {
+    padding: 14px 18px !important;
+    font-size: 15px !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .conn-box {
+    width: 100% !important;
+    max-width: 420px !important;
+    display: flex !important;
+    margin-top: 24px !important;
+  }
+}
+
+/* ========================================================
+   3. UNIVERSAL APP FOOTER STYLING
+   ======================================================== */
+.app-footer {
+  margin-top: 48px;
+  padding: 24px 16px;
+  border-top: 1px solid rgba(74, 222, 128, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-align: center;
+  width: 100%;
+  font-size: 13px;
+  color: #86efaccc;
+  background: rgba(7, 12, 9, 0.55);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  position: relative;
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-link {
+  color: #4ade80;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 13.5px;
+  padding: 8px 18px;
+  border-radius: 0 100px 0 100px;
+  border: 1.5px solid rgba(74, 222, 128, 0.35);
+  background: rgba(0, 0, 0, 0.45);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* Thick Neon Green Hover with Glow */
+.footer-link:hover,
+.footer-link:focus {
+  color: #00ff66 !important;
+  font-weight: 800 !important;
+  border-color: #00ff66 !important;
+  background-color: rgba(0, 255, 102, 0.18) !important;
+  text-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 0 28px rgba(0, 255, 102, 0.5) !important;
+  box-shadow: 0 0 18px rgba(0, 255, 102, 0.35) !important;
+  transform: translateY(-2px);
+}
+
+.footer-link.active {
+  color: #00ff66 !important;
+  font-weight: 800 !important;
+  border-color: #00ff66 !important;
+  background-color: rgba(0, 255, 102, 0.25) !important;
+  text-shadow: 0 0 16px rgba(0, 255, 102, 0.9), 0 0 32px rgba(0, 255, 102, 0.6) !important;
+  box-shadow: 0 0 20px rgba(0, 255, 102, 0.4) !important;
+}
+
+.footer-divider {
+  color: rgba(74, 222, 128, 0.4);
+  font-size: 14px;
+  user-select: none;
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: #86efac99;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .app-footer {
+    margin-top: 32px;
+    padding: 20px 12px;
+  }
+  .footer-nav {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .footer-link {
+    width: 100%;
+    max-width: 280px;
+    justify-content: center;
+  }
+  .footer-divider {
+    display: none;
+  }
+}
+

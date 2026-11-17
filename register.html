@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApproxMAC | Create Employee Account</title>
+  <link rel="stylesheet" href="acid-squares.css" />
+  <script src="acid-squares.js"></script>
+  <script src="cinematic_transitions.js"></script>
+  <style>
+    :root {
+      --bg: transparent;
+      --card-bg: rgba(7, 18, 12, 0.78);
+      --card-hover: rgba(74, 222, 128, 0.08);
+      --border: rgba(74, 222, 128, 0.35);
+      --border-subtle: rgba(74, 222, 128, 0.18);
+      --text: #4ade80;
+      --text-muted: #86efac;
+      --text-dim: #86efaccc;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "JetBrains Mono", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html {
+      background-color: #07060a;
+      min-height: 100vh;
+    }
+
+    body {
+      background-color: transparent !important;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Fixed Header Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      border-bottom: 2px solid var(--border);
+      background-color: rgba(7, 12, 9, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-wordmark {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn-link {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 400;
+      color: #86efac;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: rgba(74, 222, 128, 0.08);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-link:hover,
+    .nav-btn-link.active {
+      background: rgba(0, 255, 102, 0.16) !important;
+      color: #00ff66 !important;
+      font-weight: 800 !important;
+      border-color: #00ff66 !important;
+      text-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 0 28px rgba(0, 255, 102, 0.5) !important;
+      box-shadow: 0 0 16px rgba(0, 255, 102, 0.25) !important;
+      letter-spacing: 0.3px !important;
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #86efac;
+      font-family: var(--font-mono);
+      padding: 6px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      background: rgba(74, 222, 128, 0.05);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Portal Container & Card */
+    .portal-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 96px 20px 48px;
+      z-index: 10;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 520px;
+      background-color: var(--card-bg) !important;
+      border: 4px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(74, 222, 128, 0.15);
+      text-align: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .portal-icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .portal-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #4ade80;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .portal-subtitle {
+      font-size: 13px;
+      color: #86efac;
+      font-weight: 200;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Form Styles */
+    .auth-form {
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 300;
+      color: #86efac;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(7, 18, 12, 0.9);
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      color: #4ade80;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+      background: rgba(7, 24, 14, 0.95);
+    }
+
+    .form-input::placeholder {
+      color: #86efac55;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #86efaccc;
+      margin: 16px 0 20px;
+      padding: 8px 12px;
+      background: rgba(74, 222, 128, 0.06);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #86efac;
+      border-radius: 8px;
+      background: #22c55e;
+      color: #07060a;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .btn-submit:hover {
+      background: #16a34a;
+      border-color: #4ade80;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Notification message banner */
+    .msg-banner {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .msg-banner.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid #22c55e;
+      color: #86efac;
+    }
+
+    .msg-banner.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.18);
+      border: 2px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    .switch-page-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 13px;
+      color: #86efac;
+      text-align: center;
+    }
+
+    .switch-page-box a {
+      color: #4ade80;
+      font-weight: 600;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+
+    .switch-page-box a:hover {
+      color: #22c55e;
+    }
+
+    @media (max-width: 600px) {
+      .auth-card {
+        padding: 24px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="brand-wordmark">⚡ ApproxMAC<span style="color:#22c55e;">.AI</span></div>
+      
+      <div class="header-links">
+        <a href="login.html" class="nav-btn-link">
+          👤 Employee Login ➔
+        </a>
+      </div>
+
+      <div class="header-status">
+        <div class="status-dot"></div>
+        <span id="db-indicator">PostgreSQL Ready</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-wrapper">
+    <div class="auth-card">
+      <div class="portal-icon">✨</div>
+      <h1 class="portal-title">Create Employee Account</h1>
+      <p class="portal-subtitle">Register new edge operator credentials for ApproxMAC Telemetry</p>
+
+      <!-- Feedback Banner -->
+      <div id="status-banner" class="msg-banner"></div>
+
+      <!-- CREATE EMPLOYEE ACCOUNT FORM -->
+      <form id="register-form" class="auth-form" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Employee Full Name</label>
+          <input
+            id="reg-name"
+            class="form-input"
+            type="text"
+            placeholder="e.g. Sarah Connor"
+            required
+            autocomplete="name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-emp-id">Employee ID</label>
+          <input
+            id="reg-emp-id"
+            class="form-input"
+            type="text"
+            placeholder="e.g. EMP-7702"
+            required
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-phone">Employee Phone Number</label>
+          <input
+            id="reg-phone"
+            class="form-input"
+            type="tel"
+            placeholder="e.g. +1 (555) 234-5678"
+            required
+            autocomplete="tel"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">Employee Work Email</label>
+          <input
+            id="reg-email"
+            class="form-input"
+            type="email"
+            placeholder="e.g. sarah.connor@approxmac.internal"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Create Password</label>
+          <input
+            id="reg-password"
+            class="form-input"
+            type="password"
+            placeholder="Minimum 8 characters"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+
+        ·
+        
+
+        <button id="btn-register-submit" type="submit" class="btn-submit">
+          Create Employee Account ➔
+        </button>
+
+        <div class="switch-page-box">
+          Already have an employee account?
+          <a href="login.html">Sign In Here ➔</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- UNIVERSAL FOOTER SECTION -->
+    <footer class="app-footer" style="max-width: 500px; margin-top: 24px;">
+      <div class="footer-nav">
+        <a href="privacy.html" class="footer-link">
+          <span>🛡️</span> Privacy Policy
+        </a>
+        <span class="footer-divider">•</span>
+        <a href="terms.html" class="footer-link">
+          <span>📜</span> Terms &amp; Conditions
+        </a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 ApproxMAC.AI &bull; Adaptive Precision Edge Computing
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    function showBanner(message, type) {
+      const banner = document.getElementById("status-banner");
+      banner.className = `msg-banner ${type}`;
+      banner.innerHTML = message;
+      banner.style.display = "block";
+    }
+
+    function clearBanner() {
+      const banner = document.getElementById("status-banner");
+      banner.style.display = "none";
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      clearBanner();
+
+      const btn = document.getElementById("btn-register-submit");
+      btn.disabled = true;
+      btn.innerText = "Encrypting & Registering...";
+
+      const name = document.getElementById("reg-name").value.trim();
+      const employee_id = document.getElementById("reg-emp-id").value.trim();
+      const phone = document.getElementById("reg-phone").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+
+      try {
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, employee_id, phone, email, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          showBanner(
+            `🎉 <strong>Account created successfully for ${name}!</strong><br/>Redirecting to Employee Login...`,
+            "success"
+          );
+
+          // As required: once account is created, prompt user for employee login on the login page!
+          setTimeout(() => {
+            window.location.href = `login.html?created=1&emp_id=${encodeURIComponent(employee_id)}`;
+          }, 1200);
+        } else {
+          showBanner(`❌ ${data.message || "Failed to create account. Please try again."}`, "error");
+          btn.disabled = false;
+          btn.innerText = "Create Employee Account ➔";
+        }
+      } catch (err) {
+        showBanner(`❌ Network error: ${err.message}`, "error");
+        btn.disabled = false;
+        btn.innerText = "Create Employee Account ➔";
+      }
+    }
+
+    async function checkDb() {
+      try {
+        const res = await fetch("/api/auth/db-status");
+        if (res.ok) {
+          const data = await res.json();
+          const ind = document.getElementById("db-indicator");
+          if (ind) {
+            ind.innerText = data.database.includes("PostgreSQL") ? "PostgreSQL Active" : "SQLite Fallback";
+          }
+        }
+      } catch (e) {}
+    }
+
+    checkDb();
+  </script>
+</body>
+</html>

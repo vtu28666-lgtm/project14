@@ -1,0 +1,33 @@
+# =====================================================================
+# ApproxMAC.AI - Adaptive MAC Edge Computing & Predictive Maintenance
+# Python Dependencies Manifest
+# =====================================================================
+
+# --- Core Web Gateway & Async REST / WebSocket Engine ---
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+gunicorn>=21.2.0
+pydantic>=2.5.0
+python-multipart>=0.0.9
+websockets>=12.0
+
+# --- Numerical Analysis, DSP & Feature Extraction ---
+numpy>=1.24.0,<2.2.0
+pandas>=2.1.0
+scipy>=1.11.0
+
+# --- Edge Machine Learning & Precision Classifier ---
+scikit-learn>=1.3.0
+xgboost>=2.0.0
+joblib>=1.3.0
+
+# --- Database & Persistent Storage (PostgreSQL & SQLite) ---
+SQLAlchemy>=2.0.25
+psycopg2-binary>=2.9.9
+
+# --- Employee Authentication & Cryptography ---
+bcrypt>=4.1.2
+PyJWT>=2.8.0
+
+# --- Industrial Dataset Ingestion & Benchmark Utilities ---
+kagglehub>=0.2.0

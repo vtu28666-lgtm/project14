@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ApproxMAC | Employee Login</title>
+  <link rel="stylesheet" href="acid-squares.css" />
+  <script src="acid-squares.js"></script>
+  <script src="cinematic_transitions.js"></script>
+  <style>
+    :root {
+      --bg: transparent;
+      --card-bg: rgba(7, 18, 12, 0.78);
+      --card-hover: rgba(74, 222, 128, 0.08);
+      --border: rgba(74, 222, 128, 0.35);
+      --border-subtle: rgba(74, 222, 128, 0.18);
+      --text: #4ade80;
+      --text-muted: #86efac;
+      --text-dim: #86efaccc;
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "JetBrains Mono", sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    html {
+      background-color: #07060a;
+      min-height: 100vh;
+    }
+
+    body {
+      background-color: transparent !important;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Fixed Header Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      border-bottom: 2px solid var(--border);
+      background-color: rgba(7, 12, 9, 0.92);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-wordmark {
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: -0.3px;
+      color: #4ade80;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-btn-link {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 300;
+      color: #86efac;
+      border: 1px solid var(--border);
+      border-radius: 10px 60px 60px 10px;
+      background: rgba(74, 222, 128, 0.08);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn-link:hover,
+    .nav-btn-link.active {
+      background: rgba(0, 255, 102, 0.16) !important;
+      color: #00ff66 !important;
+      font-weight: 800 !important;
+      border-color: #00ff66 !important;
+      text-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 0 28px rgba(0, 255, 102, 0.5) !important;
+      box-shadow: 0 0 16px rgba(0, 255, 102, 0.25) !important;
+      letter-spacing: 0.3px !important;
+    }
+
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #86efac;
+      font-family: sans-serif;
+      padding: 6px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px 60px 60px 10px;
+      background: rgba(74, 222, 128, 0.05);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 10px 60px 60px 10px;
+      background: #22c55e;
+      box-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Portal Container & Card */
+    .portal-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 96px 20px 48px;
+      z-index: 10;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--card-bg) !important;
+      border: 4px solid var(--border);
+      border-radius: 10px 60px 60px 10px;
+      padding: 38px 32px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(74, 222, 128, 0.15);
+      text-align: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .portal-icon {
+      font-size: 38px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .portal-title {
+      font-size: 24px;
+      font-weight: 400;
+      color: #4ade80;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .portal-subtitle {
+      font-size: 13px;
+      color: #86efac;
+      font-weight: 200;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* Active Session Box */
+    .active-session-box {
+      display: none;
+      padding: 16px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 2px solid #22c55e;
+      border-radius: 10px 60px 60px 10px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .active-session-title {
+      font-size: 14px;
+      color: #86efac;
+      margin-bottom: 12px;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Form Styles */
+    .auth-form {
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 300;
+      color: #86efac;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 13px 14px;
+      background: rgba(7, 18, 12, 0.9);
+      border: 2px solid var(--border);
+      border-radius: 10px 60px 60px 10px;
+      color: #4ade80;
+      font-family: sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.6s ease;
+    }
+
+    .form-input:focus {
+      border-color: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+      background: rgba(7, 24, 14, 0.95);
+    }
+
+    .form-input::placeholder {
+      color: #86efac55;
+    }
+
+    .security-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #86efaccc;
+      margin: 18px 0 22px;
+      padding: 8px 12px;
+      background: rgba(74, 222, 128, 0.06);
+      border: 1px dashed var(--border);
+      border-radius: 10px 60px 60px 10px;
+      text-align: center;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #86efac;
+      border-radius: 10px 60px 60px 10px;
+      background: #22c55e;
+      color: #07060a;
+      font-size: 15px;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .btn-submit:hover {
+      background: #16a34a;
+      border-color: #4ade80;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.5);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Notification message banner */
+    .msg-banner {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .msg-banner.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.15);
+      border: 2px solid #22c55e;
+      color: #86efac;
+    }
+
+    .msg-banner.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.18);
+      border: 2px solid #ef4444;
+      color: #fca5a5;
+    }
+
+    .switch-page-box {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 13px;
+      color: #86efac;
+      text-align: center;
+    }
+
+    .switch-page-box a {
+      color: #4ade80;
+      font-weight: 400;
+      text-decoration: underline;
+      margin-left: 4px;
+    }
+
+    .switch-page-box a:hover {
+      color: #22c55e;
+    }
+
+    /* ========================================================
+       MOBILE-FRIENDLY RESPONSIVE OPTIMIZATIONS
+       ======================================================== */
+    @media (max-width: 640px) {
+      header {
+        height: 56px;
+      }
+
+      .nav-inner {
+        height: 56px;
+        padding: 0 14px;
+      }
+
+      .brand-wordmark {
+        font-size: 16px;
+        letter-spacing: -0.2px;
+      }
+
+      .nav-btn-link {
+        padding: 6px 12px;
+        font-size: 12px;
+        gap: 4px;
+        border-radius: 8px 24px 24px 8px;
+        white-space: nowrap;
+      }
+
+      .portal-wrapper {
+        padding: 72px 14px 24px;
+        width: 100%;
+        min-height: calc(100vh - 56px);
+        justify-content: flex-start;
+      }
+
+      .auth-card {
+        padding: 24px 18px;
+        border-width: 2.5px;
+        border-radius: 12px 32px 32px 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.75), 0 0 16px rgba(74, 222, 128, 0.12);
+        max-width: 100%;
+      }
+
+      .portal-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+
+      .portal-title {
+        font-size: 21px;
+        margin-bottom: 4px;
+      }
+
+      .portal-subtitle {
+        font-size: 12px;
+        margin-bottom: 18px;
+        line-height: 1.45;
+        padding: 0 4px;
+      }
+
+      .form-group {
+        margin-bottom: 16px;
+      }
+
+      .form-label {
+        font-size: 11px;
+        margin-bottom: 5px;
+      }
+
+      .form-input {
+        font-size: 16px !important; /* Prevents forced iOS Safari auto-zoom on tap */
+        padding: 12px 14px;
+        min-height: 48px;
+        border-radius: 8px 24px 24px 8px;
+        -webkit-appearance: none;
+      }
+
+      .btn-submit {
+        padding: 13px;
+        font-size: 15px;
+        min-height: 48px;
+        border-radius: 8px 24px 24px 8px;
+        touch-action: manipulation;
+      }
+
+      .btn-submit:active {
+        transform: scale(0.98);
+      }
+
+      .security-badge {
+        margin: 14px 0 16px;
+        padding: 7px 10px;
+        font-size: 11px;
+        border-radius: 8px 20px 20px 8px;
+      }
+
+      .switch-page-box {
+        margin-top: 18px;
+        padding-top: 14px;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+
+      .switch-page-box a {
+        display: inline-block;
+        padding: 4px 0;
+      }
+
+      .active-session-box {
+        padding: 14px 12px;
+        border-radius: 10px 28px 28px 10px;
+        margin-bottom: 18px;
+      }
+
+      .session-actions {
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+
+      .session-actions .btn-submit,
+      .session-actions a.btn-submit,
+      .session-actions button.btn-submit {
+        width: 100% !important;
+        padding: 10px !important;
+        font-size: 13px !important;
+        border-radius: 6px 20px 20px 6px !important;
+      }
+
+      .app-footer {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 20px !important;
+        padding: 16px 10px !important;
+        border-radius: 8px !important;
+      }
+
+      .footer-nav {
+        flex-direction: row;
+        gap: 10px;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .footer-link {
+        padding: 7px 12px !important;
+        font-size: 12px !important;
+        min-height: 38px;
+      }
+
+      .footer-copy {
+        font-size: 11px !important;
+        line-height: 1.4;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .nav-inner {
+        padding: 0 10px;
+      }
+
+      .brand-wordmark {
+        font-size: 14px;
+      }
+
+      .nav-btn-link {
+        padding: 5px 8px;
+        font-size: 11px;
+      }
+
+      .portal-wrapper {
+        padding: 66px 8px 16px;
+      }
+
+      .auth-card {
+        padding: 18px 12px;
+        border-radius: 10px 22px 22px 10px;
+      }
+
+      .portal-title {
+        font-size: 18px;
+      }
+
+      .footer-nav {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .footer-link {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="brand-wordmark">⚡ ApproxMAC<span style="color:#22c55e;">.AI</span></div>
+      
+      <div class="header-links">
+        <a href="register.html" class="nav-btn-link">
+          ✨ Create Account ➔
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="portal-wrapper">
+    <div class="auth-card">
+      <div class="portal-icon">👤</div>
+      <h1 class="portal-title">Employee Login</h1>
+      <p class="portal-subtitle">Enter your employee credentials to access telemetry and edge computing modules</p>
+
+      <!-- Feedback Banner -->
+      <div id="status-banner" class="msg-banner"></div>
+
+      <!-- Active Session Box (if already logged in) -->
+      <div id="active-session-box" class="active-session-box">
+        <div class="active-session-title">
+          👤 Currently Logged In: <strong id="logged-user-name">Employee</strong> (<span id="logged-user-id">ID</span>)
+        </div>
+        <div class="session-actions">
+          <a href="profile.html" class="btn-submit" style="width:auto; padding:8px 16px; font-size:13px;">
+            Open Profile ➔
+          </a>
+          <a href="monitor.html" class="btn-submit" style="width:auto; padding:8px 16px; font-size:13px; background:#16a34a;">
+            Open Live Monitor ➔
+          </a>
+          <button onclick="handleLogout()" class="btn-submit" style="width:auto; padding:8px 16px; font-size:13px; background:transparent; color:#86efac; border:1px solid #86efac;">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
+      <!-- EMPLOYEE LOGIN FORM -->
+      <form id="login-form" class="auth-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" for="login-id">Employee ID or Email</label>
+          <input
+            id="login-id"
+            class="form-input"
+            type="text"
+            placeholder="e.g. EMP-1042 or employee@approxmac.internal"
+            required
+            autocomplete="username"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input
+            id="login-password"
+            class="form-input"
+            type="password"
+            placeholder="••••••••••••"
+            required
+            autocomplete="current-password"
+            autocapitalize="none"
+            autocorrect="off"
+          />
+        </div>
+
+        <button id="btn-login-submit" type="submit" class="btn-submit">
+          Sign In as Employee ➔
+        </button>
+
+        <div class="security-badge">
+          🔒 POWERED BY Bcrypt
+        </div>
+
+        <div class="switch-page-box">
+          New employee without an account?
+          <a href="register.html">Create Employee Account ➔</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- UNIVERSAL FOOTER SECTION -->
+    <footer class="app-footer" style="max-width: 500px; margin-top: 24px;">
+      <div class="footer-nav">
+        <a href="privacy.html" class="footer-link">
+          <span>🛡️</span> Privacy Policy
+        </a>
+        <span class="footer-divider">•</span>
+        <a href="terms.html" class="footer-link">
+          <span>📜</span> Terms &amp; Conditions
+        </a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 ApproxMAC.AI &bull; Adaptive Precision Edge Computing
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    function showBanner(message, type) {
+      const banner = document.getElementById("status-banner");
+      banner.className = `msg-banner ${type}`;
+      banner.innerHTML = message;
+      banner.style.display = "block";
+    }
+
+    function clearBanner() {
+      const banner = document.getElementById("status-banner");
+      banner.style.display = "none";
+    }
+
+    // Parse URL query params for registration success or auth redirects
+    function checkUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      
+      if (params.get("created") === "1") {
+        const empId = params.get("emp_id") || "";
+        showBanner(
+          `🎉 <strong>Account created successfully!</strong><br/>Please enter your password below to log in as employee.`,
+          "success"
+        );
+        if (empId) {
+          const idInput = document.getElementById("login-id");
+          if (idInput) {
+            idInput.value = empId;
+          }
+          const pwInput = document.getElementById("login-password");
+          if (pwInput) {
+            pwInput.focus();
+          }
+        }
+      } else if (params.get("error") === "login_required") {
+        showBanner(
+          "🔒 <strong>Access Restricted:</strong> You must log in to your employee account before accessing application pages.",
+          "error"
+        );
+      } else if (params.get("error") === "session_expired") {
+        showBanner(
+          "⚠️ <strong>Session Expired:</strong> Your login session has timed out. Please sign in again.",
+          "error"
+        );
+      } else if (params.get("msg") === "logged_out") {
+        showBanner(
+          "👋 <strong>Signed Out:</strong> You have been successfully logged out. Please sign in to resume.",
+          "success"
+        );
+      }
+    }
+
+    // Check if session is already active
+    async function checkCurrentSession() {
+      const token = localStorage.getItem("approxmac_token");
+      if (!token) return;
+
+      try {
+        const res = await fetch("/api/auth/me", {
+          headers: { "Authorization": "Bearer " + token }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.employee) {
+            const sessionBox = document.getElementById("active-session-box");
+            if (sessionBox) {
+              sessionBox.style.display = "block";
+              document.getElementById("logged-user-name").innerText = data.employee.name;
+              document.getElementById("logged-user-id").innerText = data.employee.employee_id;
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    // Login Form Submission
+    async function handleLogin(e) {
+      e.preventDefault();
+      clearBanner();
+
+      const btn = document.getElementById("btn-login-submit");
+      btn.disabled = true;
+      btn.innerText = "Verifying Credentials...";
+
+      const employee_id = document.getElementById("login-id").value.trim();
+      const password = document.getElementById("login-password").value;
+
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ employee_id, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.status === "success") {
+          showBanner(`✅ <strong>${data.message}</strong> Access granted. Launching profile...`, "success");
+          
+          if (data.token) {
+            localStorage.setItem("approxmac_token", data.token);
+          }
+          if (data.employee) {
+            localStorage.setItem("approxmac_employee", JSON.stringify(data.employee));
+          }
+
+          setTimeout(() => {
+            window.location.href = "profile.html";
+          }, 800);
+        } else {
+          showBanner(`❌ ${data.message || "Invalid Employee credentials."}`, "error");
+          btn.disabled = false;
+          btn.innerText = "Sign In as Employee ➔";
+        }
+      } catch (err) {
+        showBanner(`❌ Network error: ${err.message}`, "error");
+        btn.disabled = false;
+        btn.innerText = "Sign In as Employee ➔";
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch("/api/auth/logout", { method: "POST" });
+      } catch (e) {}
+      localStorage.removeItem("approxmac_token");
+      localStorage.removeItem("approxmac_employee");
+      window.location.href = "login.html?msg=logged_out";
+    }
+
+    // Check DB status on mount
+    async function checkDb() {
+      try {
+        const res = await fetch("/api/auth/db-status");
+        if (res.ok) {
+          const data = await res.json();
+          const ind = document.getElementById("db-indicator");
+          if (ind) {
+            ind.innerText = data.database.includes("PostgreSQL") ? "PostgreSQL Active" : "SQLite Fallback";
+          }
+        }
+      } catch (e) {}
+    }
+
+    checkUrlParams();
+    checkCurrentSession();
+    checkDb();
+  </script>
+</body>
+</html>

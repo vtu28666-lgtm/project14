@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings & Hardware Config | Adaptive MAC</title>
+  <script src="auth_guard.js"></script>
+  <link rel="stylesheet" href="acid-squares.css?v=2.7" />
+  <script src="acid-squares.js?v=2.7"></script>
+  <script src="cinematic_transitions.js?v=2.7"></script>
+  <style>
+    :root {
+      --bg-base: #000000;
+      --bg-card: transparent;
+      --bg-elevated: rgba(16, 28, 20, 0.85);
+      --text-main: #4ade80;
+      --text-green-bright: #22c55e;
+      --text-green-light: #86efac;
+      --text-muted: #86efaccc;
+      --border: rgba(74, 222, 128, 0.28);
+      --accent: #22c55e;
+      --accent-hover: #16a34a;
+      --mode-aggressive: #4ade80;
+      --mode-exact: #ef4444;
+    }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", "JetBrains Mono", monospace;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+    html { background-color: #07060a; }
+    body { background-color: transparent !important; color: var(--text-main); min-height: 100vh; display: flex; font-size: 14px; }
+    .sidebar { position: sticky; top: 0; overflow-y: auto; width: 270px; background-color: rgba(7, 12, 9, 0.55); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 16px; height: 100vh; flex-shrink: 0; }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 28px; text-align: center; }
+    .brand h2 { font-size: 19px; letter-spacing: 0.5px; color: #4ade80; font-weight: 700; text-align: center; }
+    .highlight { color: #86efac; }
+    .nav-menu { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.nav-link { text-decoration: none; color: var(--text-green-bright); padding: 12px 14px; font-size: 14.5px; font-weight: 400; display: flex; align-items: center; justify-content: center; text-align: center; gap: 8px; transition: all 0.2s ease; border-radius: 0 100px 0 100px; background-color: transparent !important; 
+      border: 2px solid var(--border); 
+      border-width: 2px; }    .nav-link:hover { 
+      background-color: rgba(0, 255, 102, 0.16) !important; 
+      color: #00ff66 !important; 
+      font-weight: 800 !important; 
+      border-color: #00ff66 !important; 
+      text-shadow: 0 0 14px rgba(0, 255, 102, 0.85), 0 0 28px rgba(0, 255, 102, 0.5) !important; 
+      box-shadow: 0 0 16px rgba(0, 255, 102, 0.25) !important;
+      letter-spacing: 0.3px !important;
+    }
+    .nav-link.active { 
+      background-color: rgba(0, 255, 102, 0.22) !important; 
+      color: #00ff66 !important; 
+      font-weight: 800 !important; 
+      border-color: #00ff66 !important; 
+      text-shadow: 0 0 16px rgba(0, 255, 102, 0.9), 0 0 32px rgba(0, 255, 102, 0.6) !important; 
+      box-shadow: 0 0 20px rgba(0, 255, 102, 0.35) !important;
+      letter-spacing: 0.3px !important;
+    }
+    .conn-box { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px; background-color: var(--bg-elevated); border-radius: 8px; font-size: 12px; color: #86efac; font-weight: 600; border: 1px solid var(--border); text-align: center; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mode-exact); }
+    .status-dot.connected { background: #22c55e; box-shadow: 0 0 8px #22c55e; }
+    .main-wrapper { flex: 1; padding: 32px; overflow-y: auto; }
+    .top-bar { margin-bottom: 24px; }
+    .top-bar h1 { font-size: 24px; color: #4ade80; font-weight: 700; letter-spacing: -0.3px; }
+    .subtitle { font-size: 13px; color: #86efac; margin-top: 4px; font-weight: 500; }
+    .card { background-color: transparent !important; border: 1px solid var(--border); border-radius: 10px; padding: 18px; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .card-label { font-size: 11.5px; text-transform: uppercase; color: #86efac; letter-spacing: 0.6px; display: block; margin-bottom: 6px; font-weight: 600; }
+    .form-input { width: 100%; padding: 10px 12px; background-color: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; color: #4ade80; font-size: 14px; font-weight: 600; }
+    .btn { padding: 10px 18px; border: 1px solid #4ade80; border-radius: 6px; font-weight: 700; cursor: pointer; background-color: #22c55e; color: #07060a; transition: all 0.2s; }
+    .btn:hover { background-color: #16a34a; border-color: #86efac; }
+  
+    /* Mobile View: Sidebar is strictly hidden until 2-dots button is clicked; covers entire page in cinematic slide */
+    @media (max-width: 900px) {
+      body {
+        display: block !important;
+        width: 100% !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+      }
+      .main-wrapper {
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 76px 16px 28px 16px !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
+        display: block !important;
+      }
+      .sidebar {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(5, 12, 8, 0.98) !important;
+        backdrop-filter: blur(28px) !important;
+        -webkit-backdrop-filter: blur(28px) !important;
+        border: none !important;
+        box-shadow: none !important;
+        transform: translate3d(-100vw, 0, 0) !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        transition: transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+                    opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 1.1s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        z-index: 99999 !important;
+        overflow-y: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        padding: 32px 20px !important;
+      }
+      .sidebar.mobile-open {
+        transform: translate3d(0, 0, 0) !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        box-shadow: 0 0 70px rgba(0, 255, 102, 0.4) !important;
+      }
+      .metrics-row {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+      }
+      .card {
+        padding: 16px !important;
+      }
+    }
+    @media (max-width: 540px) {
+      .metrics-row {
+        grid-template-columns: 1fr !important;
+      }
+      .top-bar h1 {
+        font-size: 20px !important;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <!-- Mobile Two-Dots Toggle Button (Top-Right) -->
+  <button id="mobileNavToggle" class="mobile-dots-btn" aria-label="Toggle navigation menu" title="Toggle Navigation">
+    <span class="mobile-dot"></span>
+    <span class="mobile-dot"></span>
+  </button>
+  <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <h2>⚡ ApproxMAC<span class="highlight">.AI</span></h2>
+      <button class="sidebar-close-btn" aria-label="Close Menu">&times;</button>
+    </div>
+    <nav class="nav-menu">
+      <a href="monitor.html" class="nav-link">Live Monitor</a>
+      <a href="spectral.html" class="nav-link">Spectral & FFT</a>
+      <a href="bit_inspector.html" class="nav-link">Bit Inspector</a>
+      <a href="ai_policy.html" class="nav-link">Operation Explainer</a>
+      <a href="energy.html" class="nav-link">Energy & Silicon</a>
+      <a href="analytics.html" class="nav-link">Analytics</a>
+      <a href="config.html" class="nav-link active">Hardware Information</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+    </nav>
+    <div class="conn-box">
+      <div id="status-indicator" class="status-dot"></div>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </aside>
+
+  <main class="main-wrapper">
+    <div class="top-bar">
+      <h1>Hardware Ingestion & Replay Lab</h1>
+      <p class="subtitle">Switch telemetry sources, select industrial traces, and adjust escalation thresholds</p>
+    </div>
+
+    <div class="card" style="max-width: 600px;">
+      <form onsubmit="saveConfiguration(event)">
+        <div style="margin-bottom: 16px;">
+          <label class="card-label">Data Ingestion Driver</label>
+          <select id="cfg-driver" class="form-input" onchange="toggleDriverFields()">
+            <option value="mock">Software Benchmark Trace (CSV/WAV)</option>
+            <option value="hardware">Physical Hardware Sensor (I2C/SPI ADC)</option>
+          </select>
+        </div>
+
+        <div id="mock-opts" style="margin-bottom: 16px;">
+          <label class="card-label">Benchmark Trace Scenario</label>
+          <select id="cfg-scenario" class="form-input">
+            <option value="test_trace.csv">Industrial Pump - Cavitation Fault Scenario</option>
+            <option value="bearing_flaw.csv">NASA Bearing - Outer Race Defect (BPFO)</option>
+            <option value="fan_unbalance.csv">Industrial Fan - Dynamic Unbalance</option>
+          </select>
+        </div>
+
+        <!-- Hardware Sensor Selection & Real Communication Panel -->
+        <div id="hardware-opts" style="margin-bottom: 16px; display: none;">
+          <label class="card-label">Select Hardware Sensor Model</label>
+          <select id="cfg-sensor-model" class="form-input" onchange="testSensorCommunication(false)">
+            <option value="mpu6050" selected>MPU-6050 (I2C 0x68 - 3-Axis Accelerometer &amp; Gyro)</option>
+            <option value="adxl345">ADXL345 (I2C 0x53 - Digital Tri-Axial Accelerometer)</option>
+            <option value="iis3dwb">IIS3DWB (SPI Bus 0 - Industrial 6kHz Vibration Sensor)</option>
+            <option value="adxl1001">ADXL1001 / ADXL1002 (High-Bandwidth 11kHz IEPE Accelerometer)</option>
+            <option value="inmp441">INMP441 (I2S Bus - Acoustic Cavitation Sensor)</option>
+          </select>
+
+          <!-- Live Real Sensor Connection Card -->
+          <div id="sensor-comm-card" style="margin-top: 12px; padding: 14px; background: rgba(7, 18, 12, 0.75); border: 1px solid rgba(74, 222, 128, 0.35); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <span style="font-weight: 700; color: #86efac; font-size: 12.5px;">Real Sensor Connection Status</span>
+              <span id="sensor-status-badge" style="font-size: 11px; padding: 3px 8px; border-radius: 4px; font-weight: 700; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border: 1px solid #f59e0b;">LISTENING FOR SENSOR</span>
+            </div>
+            
+            <div id="sensor-comm-info" style="font-size: 12px; color: #a7f3d0; line-height: 1.6;">
+              Bus: <strong>I2C Bus 1</strong> &bull; Address: <strong>0x68</strong> &bull; Ingestion: <strong>Ready for Inbound Telemetry</strong>
+            </div>
+
+            <div id="real-sensor-stats" style="margin-top: 8px; padding: 8px 10px; background: rgba(0,0,0,0.4); border-radius: 6px; font-size: 11.5px; color: #86efac; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+              <span>Packets Received: <strong id="real-rx-packets" style="color:#fff;">0</strong></span>
+              <span>Client Node: <strong id="real-rx-client" style="color:#4ade80;">Waiting...</strong></span>
+              <span>Link: <strong id="real-rx-link" style="color:#86efac;">HTTP / WebSocket</strong></span>
+            </div>
+
+            <!-- Ingestion Endpoint URLs For Real Hardware Devices -->
+            <div style="margin-top: 10px; padding: 8px 10px; background: rgba(74, 222, 128, 0.05); border: 1px dashed rgba(74, 222, 128, 0.25); border-radius: 6px; font-size: 11px; color: #a7f3d0;">
+              <div>📡 <strong>Inbound REST API:</strong> <code id="disp-api-url" style="color:#00ff66;">POST /api/sensor/ingest</code></div>
+              <div style="margin-top: 4px;">⚡ <strong>Inbound WebSocket:</strong> <code id="disp-ws-url" style="color:#00ff66;">ws://.../ws/sensor-inbound</code></div>
+            </div>
+
+            <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="btn" style="padding: 7px 14px; font-size: 12px;" onclick="testSensorCommunication(true)">
+                ⚡ Verify Sensor Communication
+              </button>
+              <button type="button" class="btn btn-secondary" style="padding: 7px 14px; font-size: 12px; background: transparent; color: #4ade80; border: 1px solid #4ade80;" onclick="sendTestRealSensorPacket()">
+                🧪 Test Ingest Real Packet
+              </button>
+              <span id="sensor-ping-status" style="font-size: 11.5px; color: #86efac;"></span>
+            </div>
+
+            <!-- Microcontroller Quick Guide -->
+            <details style="margin-top: 12px; font-size: 11.5px; color: #86efaccc;">
+              <summary style="cursor: pointer; color: #4ade80; font-weight: 600;">📋 How real hardware sensor connects (ESP32 / Arduino / Python)</summary>
+              <div style="margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.6); border-radius: 6px; font-family: monospace; font-size: 11px; color: #a7f3d0; line-height: 1.5; overflow-x: auto;">
+                // When ESP32 / Arduino reads real MPU-6050, send vibration buffer via HTTP:<br>
+                HTTPClient http;<br>
+                http.begin("http://&lt;SERVER_IP&gt;:8000/api/sensor/ingest");<br>
+                http.addHeader("Content-Type", "application/json");<br>
+                http.POST("{\"sensor_model\":\"mpu6050\",\"vibration\":" + String(accel_z) + "}");<br>
+                // Or stream directly via WebSocket: ws://&lt;SERVER_IP&gt;:8000/ws/sensor-inbound
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label class="card-label">Telemetry Playback Speed</label>
+          <select id="cfg-speed" class="form-input">
+            <option value="1.00" selected>1.0x (Slow / Observable - 1.0s)</option>
+            <option value="1.50">0.7x (Very Slow - 1.5s)</option>
+            <option value="2.00">0.5x (Super Slow - 2.0s)</option>
+            <option value="0.50">2.0x (Moderate - 500ms)</option>
+            <option value="0.25">4.0x (Fast - 250ms)</option>
+            <option value="0.50">0.5x (Slow Motion - 500ms)</option>
+            <option value="0.10">2.5x (Fast - 100ms)</option>
+            <option value="0.05">5.0x (High Speed - 50ms)</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <label class="card-label">Kurtosis Trigger Threshold</label>
+          <input type="number" step="0.1" id="cfg-kurt" class="form-input" value="3.5">
+        </div>
+
+        <button type="submit" class="btn">Update Configuration</button>
+      </form>
+    </div>
+
+    <!-- UNIVERSAL FOOTER SECTION -->
+    <footer class="app-footer">
+      <div class="footer-nav">
+        <a href="privacy.html" class="footer-link">
+          <span>🛡️</span> Privacy Policy
+        </a>
+        <span class="footer-divider">•</span>
+        <a href="terms.html" class="footer-link">
+          <span>📜</span> Terms &amp; Conditions
+        </a>
+      </div>
+      <div class="footer-copy">
+        &copy; 2026 ApproxMAC.AI &bull; Adaptive Precision Edge Computing &bull; Industrial Predictive Maintenance
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    function updateEndpointDisplays() {
+      const origin = window.location.origin;
+      const host = window.location.host;
+      const protoWs = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const apiEl = document.getElementById("disp-api-url");
+      const wsEl = document.getElementById("disp-ws-url");
+      if (apiEl) apiEl.innerText = `${origin}/api/sensor/ingest`;
+      if (wsEl) wsEl.innerText = `${protoWs}//${host}/ws/sensor-inbound`;
+    }
+
+    async function pollRealSensorStatus() {
+      const driver = document.getElementById("cfg-driver") ? document.getElementById("cfg-driver").value : "mock";
+      if (driver !== "hardware") return;
+
+      try {
+        const res = await fetch("/api/hardware/sensor-status");
+        if (res.ok) {
+          const data = await res.json();
+          const badge = document.getElementById("sensor-status-badge");
+          const rxPackets = document.getElementById("real-rx-packets");
+          const rxClient = document.getElementById("real-rx-client");
+          const rxLink = document.getElementById("real-rx-link");
+
+          if (rxPackets) rxPackets.innerText = data.packets_received;
+          if (rxClient) rxClient.innerText = data.client_ip || "Waiting...";
+          if (rxLink) rxLink.innerText = data.connection_type || "HTTP / WebSocket";
+
+          if (badge) {
+            if (data.connected) {
+              badge.innerText = "🟢 REAL SENSOR CONNECTED";
+              badge.style.color = "#00ff66";
+              badge.style.borderColor = "#00ff66";
+              badge.style.background = "rgba(0, 255, 102, 0.22)";
+              badge.style.boxShadow = "0 0 12px rgba(0, 255, 102, 0.4)";
+            } else if (data.packets_received > 0) {
+              badge.innerText = `IDLE (${data.last_packet_seconds_ago}s ago)`;
+              badge.style.color = "#f59e0b";
+              badge.style.borderColor = "#f59e0b";
+              badge.style.background = "rgba(245, 158, 11, 0.15)";
+              badge.style.boxShadow = "none";
+            } else {
+              badge.innerText = "LISTENING FOR SENSOR";
+              badge.style.color = "#86efac";
+              badge.style.borderColor = "rgba(74, 222, 128, 0.4)";
+              badge.style.background = "rgba(74, 222, 128, 0.1)";
+              badge.style.boxShadow = "none";
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function sendTestRealSensorPacket() {
+      const model = document.getElementById("cfg-sensor-model").value;
+      const statusText = document.getElementById("sensor-ping-status");
+      if (statusText) statusText.innerText = "Transmitting real sensor frame to /api/sensor/ingest...";
+
+      // Generate realistic 512-sample vibration waveform
+      const samples = [];
+      for (let i = 0; i < 512; i++) {
+        samples.push(Number((Math.sin(i * 0.1) * 0.25 + (Math.random() - 0.5) * 0.08).toFixed(4)));
+      }
+
+      try {
+        const res = await fetch("/api/sensor/ingest", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sensor_model: model,
+            samples: samples
+          })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          if (statusText) {
+            statusText.innerText = `✅ Ingested ${data.acknowledged} samples from real sensor!`;
+            statusText.style.color = "#00ff66";
+          }
+          pollRealSensorStatus();
+        } else {
+          if (statusText) statusText.innerText = "❌ " + data.message;
+        }
+      } catch (err) {
+        if (statusText) statusText.innerText = "❌ Error: " + err.message;
+      }
+    }
+
+    function toggleDriverFields() {
+      const driver = document.getElementById("cfg-driver").value;
+      const isMock = driver === "mock";
+      document.getElementById("mock-opts").style.display = isMock ? "block" : "none";
+      document.getElementById("hardware-opts").style.display = isMock ? "none" : "block";
+      if (!isMock) {
+        testSensorCommunication(false);
+        pollRealSensorStatus();
+      }
+    }
+
+    async function testSensorCommunication(notify = false) {
+      const model = document.getElementById("cfg-sensor-model").value;
+      const statusBadge = document.getElementById("sensor-status-badge");
+      const infoBox = document.getElementById("sensor-comm-info");
+      const pingStatus = document.getElementById("sensor-ping-status");
+
+      if (pingStatus) pingStatus.innerText = "Communicating with sensor...";
+
+      try {
+        const res = await fetch("/api/hardware/test-sensor", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sensor_model: model })
+        });
+        const data = await res.json();
+        if (data.status === "success") {
+          if (statusBadge) {
+            statusBadge.innerText = "ONLINE";
+            statusBadge.style.color = "#22c55e";
+            statusBadge.style.borderColor = "#22c55e";
+            statusBadge.style.background = "rgba(34, 197, 94, 0.2)";
+          }
+          if (infoBox) {
+            infoBox.innerHTML = `
+              Sensor: <strong>${data.sensor_name}</strong><br>
+              Bus: <strong>${data.bus}</strong> &bull; Address: <strong>${data.address}</strong> &bull; Protocol: <strong>${data.comm_protocol}</strong><br>
+              Rate: <strong>${data.sample_rate}</strong> &bull; Range: <strong>${data.range}</strong><br>
+              Telemetry Packet: <code style="color:#4ade80; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px;">${data.packet}</code>
+            `;
+          }
+          if (pingStatus) {
+            pingStatus.innerText = `✅ Handshake Verified (${data.handshake})`;
+            pingStatus.style.color = "#22c55e";
+          }
+          if (notify) {
+            alert(`✅ Communication Successful!\n\nSensor: ${data.sensor_name}\nInterface: ${data.bus}\nAddress: ${data.address}\nHandshake: ${data.handshake}\n\nTelemetry link is active.`);
+          }
+        }
+      } catch (err) {
+        if (statusBadge) {
+          statusBadge.innerText = "OFFLINE";
+          statusBadge.style.color = "#ef4444";
+          statusBadge.style.borderColor = "#ef4444";
+        }
+        if (pingStatus) {
+          pingStatus.innerText = "❌ Sensor communication error: " + err.message;
+          pingStatus.style.color = "#ef4444";
+        }
+      }
+    }
+
+    async function loadCurrentConfig() {
+      try {
+        const res = await fetch("/api/config");
+        if (res.ok) {
+          const cfg = await res.json();
+          if (document.getElementById("cfg-driver") && cfg.source_type) document.getElementById("cfg-driver").value = cfg.source_type;
+          if (document.getElementById("cfg-scenario") && cfg.dataset_file) document.getElementById("cfg-scenario").value = cfg.dataset_file;
+          if (document.getElementById("cfg-sensor-model") && cfg.sensor_model) document.getElementById("cfg-sensor-model").value = cfg.sensor_model;
+          if (document.getElementById("cfg-speed") && cfg.sampling_delay) document.getElementById("cfg-speed").value = String(cfg.sampling_delay.toFixed ? cfg.sampling_delay.toFixed(2) : cfg.sampling_delay);
+          if (document.getElementById("cfg-kurt") && cfg.kurtosis_threshold) document.getElementById("cfg-kurt").value = cfg.kurtosis_threshold;
+          toggleDriverFields();
+        }
+      } catch (e) {
+        toggleDriverFields();
+      }
+    }
+
+    async function saveConfiguration(e) {
+      e.preventDefault();
+      const payload = {
+        source_type: document.getElementById("cfg-driver").value,
+        sensor_model: document.getElementById("cfg-sensor-model") ? document.getElementById("cfg-sensor-model").value : "mpu6050",
+        dataset_file: document.getElementById("cfg-scenario").value,
+        chunk_size: 512,
+        sampling_delay: parseFloat(document.getElementById('cfg-speed') ? document.getElementById('cfg-speed').value : 1.0),
+        kurtosis_threshold: parseFloat(document.getElementById("cfg-kurt").value),
+        variance_threshold: 1.8
+      };
+
+      const res = await fetch("/api/config", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (payload.source_type === "hardware") {
+        testSensorCommunication(false);
+      }
+
+      alert("Configuration successfully saved! Edge Engine is communicating with " + (payload.source_type === "hardware" ? ("Sensor: " + payload.sensor_model.toUpperCase()) : "Benchmark Trace"));
+    }
+
+    function connectSocket() {
+      const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+      const ws = new WebSocket(`${proto}//${window.location.host}/ws/telemetry`);
+
+      ws.onopen = () => {
+        document.getElementById("status-indicator").classList.add("connected");
+        document.getElementById("status-text").innerText = "Edge Stream Active";
+      };
+
+      ws.onclose = () => {
+        document.getElementById("status-indicator").classList.remove("connected");
+        document.getElementById("status-text").innerText = "Offline (Reconnecting...)";
+        setTimeout(connectSocket, 2000);
+      };
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      updateEndpointDisplays();
+      loadCurrentConfig();
+      connectSocket();
+      setInterval(pollRealSensorStatus, 2000);
+    });
+  </script>
+</body>
+</html>
